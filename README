@@ -3,3 +3,15 @@ A helper script to create a template GNU autotools project.
 
 Make sure to chmod +x the script. It builds a C template project that works
 with GNU Autotools (autoconf and automake).
+
+To use:
+
+1. Edit the variables at the top of the script to set package name, version, and bug email.
+2. Then run: ./make_gnu_proj <project_name>
+3. Then cd into the <project_name> directory and you can then do:
+	./configure --prefix=/home/foo/
+	make
+	make install
+
+
+The main executable will be in /home/foo/bin/ with above. Default is /bin at root but a little bit over the top.
