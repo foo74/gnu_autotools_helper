@@ -1,0 +1,64 @@
+This project is a sample of how to get up and running quickly using autotools. Predominently autoconf and automake 
+but also libtool is part of the autotools set.
+
+TO start:
+1. Create your project directory.
+2. Create your source directory called src.
+3. Run autoscan which creates configure.scan.
+4. Move configure.scan to configure.ac.
+5. Edit conifgure.ac as desired. Very least change AC_INIT to include project info. See notes below.
+6. Run autoconf which creates the all important configure script.
+7. Edit Makefile.am as appropriate. See notes below.
+8. Edit src/Makefile.am as appropriate. See notes below.
+9. Edit mans/Makefile.am as appropriate. See notes below.
+10. Add AM_INIT_AUTOMAKE just after the AC_INIT in configure.ac.
+11. Add AC_OUTPUT(Makefile src/Makefile man/Makefile) to configure.ac.
+12. Run aclocal to get the aclocal.m4 which is what automake uses.
+13. Run automake --add-missing --copy (can we just run the autogen.sh here? try it).
+14. Run autoreconf --install (why not just autoreconf? try it).
+15. Now should be ready. Run make dist to create a package. Then users just tar -xvf <package>, ./configure, make, make install
+
+
+
+
+NOTES ON CONFIGURE.AC EDITS
+
+
+
+
+
+------------------------------------------------------
+NOTES ON MAKEFILE.AM EDITS 
+
+
+- Root project level Makefile.am edits
+SUBDIRS = src
+
+
+- src/Makefile.am edits
+# Pass values to compiler and linker.
+CFLAGS = -Wall -g -std=c99 -O2
+LDFLAGS =
+
+# List the binaries and their sources.
+bin_PROGRAMS = main1 main2 mainN
+main1_SOURCES = main1.c main2.h
+main2_SOURCES = main2.c main2.h
+
+# Location to install below installs in ($PREFIX)/bin or ($PREFIX)/sbin
+bin_PROGRAMS
+sbin_PROGRAMS
+
+
+- mans/Makefile.am edits
+man_MANS = mainman.1 mainman.3 mainman.8
+
+
+------------------------------------------------------
+autogen.sh script (runs autoreconf and automake so missing files are there). Make sure
+to chmod +x on autgen.sh.
+
+#!/bin/sh
+autoreconf --install
+automake --add-missing --copy > /dev/null 2>$1
+------------------------------------------------------
