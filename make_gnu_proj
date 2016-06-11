@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Inspiration from the following:
+# - AUTOTOOLS - A practitioner's guide to GNU Autoconf, Automake, and Libtool by John Calcote.
+# - http://mij.oltrelinux.com/devel/autoconf-automake/
+
 if [ -d "$1" ];
 	then
 		echo "\n\nERROR: directory '$1' already exists!\n\n"
@@ -12,7 +16,7 @@ if [ -z "$1" ];
 		echo "\nUSAGE: ./make_proj <root_folder_name>"
 		echo "\nEXAMPLE: ./make_proj foo\n\n"
 	else
-		echo "\n\nGNU Coding Standards (GDS) Compliant Project Template"
+		echo "\n\nGNU Coding Standards (GCS) Compliant Project Template"
 		echo -n "\nMaking '$1' root project directory..."
 		mkdir $1
 		echo " done"
@@ -61,14 +65,8 @@ if [ -z "$1" ];
 		echo -n "Making ChangeLog file..."
 		touch $1/ChangeLog
 		echo " done"
-		echo -n "Running 'autoscan'..."
-		cd $1; autoscan
-		echo " done"
-		echo -n "Moving configure.scan to configure.ac..."
-		mv configure.scan configure.ac
-		echo " done"
 		echo -n "Building Makefile.am..."
-		cat <<- EOF > Makefile.am
+		cd $1; cat <<- EOF > Makefile.am
 			SUBDIRS = src
 			EOF
 		echo " done"
@@ -76,15 +74,11 @@ if [ -z "$1" ];
 		cat <<- EOF > src/Makefile.am
 			# Flags to pass to compiler and linker.
 			AM_CFLAGS = -Wall -g -std=c99 -O2
-			LDFLAGS =
+			AM_LDFLAGS =
 			# List the binaries and their sources.
-			bin_PROGRAMS = main1 main2 mainN
-			main1_SOURCES = main1.c main2.h
-			main2_SOURCES = main2.c main2.h
-
+			bin_PROGRAMS = main
+			main_SOURCES = main.c main.h
 			# Location to install below installs in ($PREFIX)/bin or ($PREFIX)/sbin
-			bin_PROGRAMS
-			sbin_PROGRAMS
 			EOF
 		echo " done"
 		echo -n "Building doc/Makefile.am..."
@@ -106,6 +100,24 @@ if [ -z "$1" ];
 		cat <<- EOF > examples/Makefile.am
 			# Nothing here yet.
 			EOF
+		echo " done"
+		echo -n "Running 'autoscan'..."
+		autoscan
+		echo " done"
+		echo -n "Moving configure.scan to configure.ac..."
+		mv configure.scan configure.ac
+		echo " done"
+		echo -n "Insert AM_INIT_AUTOMAKE into configure.ac..."
+		sed -i "/AC_INIT/aAM_INIT_AUTOMAKE" configure.ac
+		echo " done"
+		echo -n "Running aclocal..."
+		aclocal
+		echo " done"
+		echo -n "Running autoreconf --install..."
+		autoreconf --install
+		echo " done"
+		echo -n "Running automake --add-missing --copy..."
+		automake --add-missing --copy
 		echo " done"
 		echo "\n\n"
 fi
