@@ -1,0 +1,111 @@
+#!/bin/sh
+
+if [ -d "$1" ];
+	then
+		echo "\n\nERROR: directory '$1' already exists!\n\n"
+		exit
+fi
+
+if [ -z "$1" ];
+	then
+		echo "\n\nERROR: Root directory required!"
+		echo "\nUSAGE: ./make_proj <root_folder_name>"
+		echo "\nEXAMPLE: ./make_proj foo\n\n"
+	else
+		echo "\n\nGNU Coding Standards (GDS) Compliant Project Template"
+		echo -n "\nMaking '$1' root project directory..."
+		mkdir $1
+		echo " done"
+		echo -n "Making '$1/src' subdirectory..."
+		mkdir $1/src
+		echo " done"
+		echo -n "Building $1/src/main.c stub..."
+		cat <<- EOF > $1/src/main.c
+			#include "main.h"
+
+			int main()
+			{
+			   printf("stubby...");
+
+			   return 0;
+			}
+			EOF
+		echo " done"
+		echo -n "Building $1/src/main.h stub..."
+		cat <<- EOF > $1/src/main.h
+			/* Add includes... */
+			#include <stdio.h>
+			EOF
+		echo " done"
+		echo -n "Making '$1/doc' subdirectory..."
+		mkdir $1/doc
+		echo " done"
+		echo -n "Making '$1/man' subdirectory..."
+		mkdir $1/man
+		echo " done"
+		echo -n "Making '$1/scripts' subdirectory..."
+		mkdir $1/scripts
+		echo " done"
+		echo -n "Making '$1/examples' subdirectory..."
+		mkdir $1/examples
+		echo " done"
+		echo -n "Making NEWS file..."
+		touch $1/NEWS
+		echo " done"
+		echo -n "Making README file..."
+		touch $1/README
+		echo " done"
+		echo -n "Making AUTHORS file..."
+		touch $1/AUTHORS
+		echo " done"
+		echo -n "Making ChangeLog file..."
+		touch $1/ChangeLog
+		echo " done"
+		echo -n "Running 'autoscan'..."
+		cd $1; autoscan
+		echo " done"
+		echo -n "Moving configure.scan to configure.ac..."
+		mv configure.scan configure.ac
+		echo " done"
+		echo -n "Building Makefile.am..."
+		cat <<- EOF > Makefile.am
+			SUBDIRS = src
+			EOF
+		echo " done"
+		echo -n "Building src/Makefile.am..."
+		cat <<- EOF > src/Makefile.am
+			# Flags to pass to compiler and linker.
+			AM_CFLAGS = -Wall -g -std=c99 -O2
+			LDFLAGS =
+			# List the binaries and their sources.
+			bin_PROGRAMS = main1 main2 mainN
+			main1_SOURCES = main1.c main2.h
+			main2_SOURCES = main2.c main2.h
+
+			# Location to install below installs in ($PREFIX)/bin or ($PREFIX)/sbin
+			bin_PROGRAMS
+			sbin_PROGRAMS
+			EOF
+		echo " done"
+		echo -n "Building doc/Makefile.am..."
+		cat <<- EOF > doc/Makefile.am
+			# Nothing here yet.
+			EOF
+		echo " done"
+		echo -n "Building man/Makefile.am..."
+		cat <<- EOF > man/Makefile.am
+			# Nothing here yet.
+			EOF
+		echo " done"
+		echo -n "Building scripts/Makefile.am..."
+		cat <<- EOF > scripts/Makefile.am
+			# Nothing here yet.
+			EOF
+		echo " done"
+		echo -n "Building examples/Makefile.am..."
+		cat <<- EOF > examples/Makefile.am
+			# Nothing here yet.
+			EOF
+		echo " done"
+		echo "\n\n"
+fi

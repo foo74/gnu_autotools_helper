@@ -1,0 +1,5 @@
+# gnu_autotools_helper
+A helper script to create a template GNU autotools project.
+
+Make sure to chmod +x the script. It builds a C template project that works
+with GNU Autotools (autoconf and automake).
