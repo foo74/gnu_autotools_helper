@@ -4,6 +4,10 @@
 # - AUTOTOOLS - A practitioner's guide to GNU Autoconf, Automake, and Libtool by John Calcote.
 # - http://mij.oltrelinux.com/devel/autoconf-automake/
 
+PACKAGE_NAME="my_cool_package2"
+VERSION="0.0.1"
+BUG_EMAIL="none@none.com"
+
 if [ -d "$1" ];
 	then
 		echo "\n\nERROR: directory '$1' already exists!\n\n"
@@ -109,6 +113,15 @@ if [ -z "$1" ];
 		echo " done"
 		echo -n "Insert AM_INIT_AUTOMAKE into configure.ac..."
 		sed -i "/AC_INIT/aAM_INIT_AUTOMAKE" configure.ac
+		echo " done"
+		echo -n "Adjusting package name in AC_INIT in configure.ac..."
+		sed -i "s/FULL-PACKAGE-NAME/$PACKAGE_NAME/g" configure.ac
+		echo " done"
+		echo -n "Adjusting version in AC_INIT in configure.ac..."
+		sed -i "s/VERSION/$VERSION/g" configure.ac
+		echo " done"
+		echo -n "Adjusting bug report address in AC_INIT in configure.ac..."
+		sed -i "s/BUG-REPORT-ADDRESS/$BUG_EMAIL/g" configure.ac
 		echo " done"
 		echo -n "Running aclocal..."
 		aclocal
