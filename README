@@ -2,7 +2,9 @@
 A helper script to create a template GNU autotools project.
 
 Make sure to chmod +x the script. It builds a C template project that works
-with GNU Autotools (autoconf and automake).
+with GNU Autotools (autoconf and automake). Currently only builds with src
+subdirectory. If you need man, doc, etc subdirs then add them in the script
+at the location for sources.
 
 To use:
 
@@ -14,4 +16,4 @@ To use:
 	make install
 
 
-The main executable will be in /home/foo/bin/ with above. Default is /bin at root but a little bit over the top.
+The main executable will be in /home/foo/bin/ with above. Default is /bin at root without prefix set.
