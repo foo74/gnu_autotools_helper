@@ -48,9 +48,9 @@ else
 	cat <<- EOF > $1/src/main.c
 		#include "main.h"
 
-		int main()
+		int main(int argc, char *argv[])
 		{
-			printf("stubby...");
+			printf("\n\nstubby...\n\n");
 
 			return 0;
 		}
