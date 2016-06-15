@@ -111,6 +111,7 @@ echo " done"
 # Build the Makefile.am file with the sources. Just src for now.
 	echo -n "Building Makefile.am..."
 	cat <<- EOF > Makefile.am
+		AUTOMAKE_OPTIONS=subdir-objects
 		SUBDIRS = src
 		EOF
 	echo " done"
@@ -121,9 +122,10 @@ echo " done"
 		# Flags to pass to compiler and linker.
 		AM_CFLAGS = -Wall -g -std=c99 -O2
 		AM_LDFLAGS =
+		AUTOMAKE_OPTIONS=subdir-objects
 		# List the binaries and their sources.
 		bin_PROGRAMS = pass_gen
-		main_SOURCES = pass_gen.c pass_gen.h
+		pass_gen_SOURCES = pass_gen.c pass_gen.h transforms/transforms.c transforms/transforms.h
 		# Location to install below installs in ($PREFIX)/bin or ($PREFIX)/sbin
 		EOF
 	echo " done"
