@@ -6,6 +6,9 @@ with GNU Autotools (autoconf and automake). Currently only builds with src
 subdirectory. If you need man, doc, etc subdirs then add them in the script
 at the location for sources.
 
+The conv_ assumes an existing project.
+The make_ assumes no existing project.
+
 To use:
 
 1. Edit the variables at the top of the script to set package name, version, and bug email.

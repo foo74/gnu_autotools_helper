@@ -1,0 +1,207 @@
+#!/bin/sh
+
+###################################################################################################
+# Script for converting a project to an autotools project.
+# Written by Foo74, June 14, 2016.
+#
+# Inspiration from the following:
+# - AUTOTOOLS - A practitioner's guide to GNU Autoconf, Automake, and Libtool by John Calcote.
+# - http://mij.oltrelinux.com/devel/autoconf-automake/
+###################################################################################################
+
+# Set the package name, version, and bug email. 
+PACKAGE_NAME="pass_gen"
+VERSION="0.0.1"
+BUG_EMAIL="foo74@protonmail.ch"
+
+
+# Output some information about the script starting.
+	echo "\n\nGNU Coding Standards (GCS) - Autotools Converter"
+
+# Make the src subdirectory to hold code sources.
+echo "Checking for src directory..."
+if [ -d "src" ]; then
+	echo -n "'src' subdirectory exists, skipping."
+else
+	echo -n "Making 'src' subdirectory..."
+	mkdir src
+fi
+echo " done"
+
+# Make the doc subdirectory to hold project docs.
+echo "Checking for doc directory..."
+if [ -d "doc" ]; then
+	echo -n "'doc' subdirectory exists, skipping."
+else
+	echo -n "Making 'doc' subdirectory..."
+	mkdir doc
+fi
+echo " done"
+
+# Make the man subdirectory to hold the man pages.
+echo "Checking for man directory..."
+if [ -d "man" ]; then
+	echo -n "'man' subdirectory exists, skipping."
+else
+	echo -n "Making 'man' subdirectory..."
+	mkdir man
+fi
+echo " done"
+
+# Make the man subdirectory to hold scripts (interpreted files).
+echo "Checking for scripts directory..."
+if [ -d "scripts" ]; then
+	echo -n "'scripts' subdirectory exists, skipping."
+else
+	echo -n "Making 'scripts' subdirectory..."
+	mkdir scripts
+fi
+echo " done"
+
+# Make the examples subdirectory to hold example files.
+echo "Checking for examples directory..."
+if [ -d "examples" ]; then
+	echo -n "'examples' subdirectory exists, skipping."
+else
+	echo -n "Making 'examples' subdirectory..."
+	mkdir examples
+fi
+echo " done"
+
+# Make the NEWS file.
+echo "Checking for NEWS file..."
+if [ -f NEWS ]; then
+	echo -n "'NEWS' file exists, skipping."
+else
+	echo -n "Making 'NEWS' file..."
+	touch NEWS
+fi
+echo " done"
+
+# Make the README file.
+echo "Checking for README file..."
+if [ -f README ]; then
+	echo -n "'README' file exists, skipping."
+else
+	echo -n "Making 'README' file..."
+	touch README
+fi
+echo " done"
+
+# Make the AUTHORS file.
+echo "Checking for AUTHORS file..."
+if [ -f AUTHORS ]; then
+	echo -n "'AUTHORS' file exists, skipping."
+else
+	echo -n "Making 'AUTHORS' file..."
+	touch AUTHORS
+fi
+echo " done"
+
+# Make the ChangeLog file.
+echo "Checking for ChangeLog file..."
+if [ -f ChangeLog ]; then
+	echo -n "'ChangeLog' file exists, skipping."
+else
+	echo -n "Making 'ChangeLog' file..."
+	touch ChangeLog
+fi
+echo " done"
+
+# Build the Makefile.am file with the sources. Just src for now.
+	echo -n "Building Makefile.am..."
+	cat <<- EOF > Makefile.am
+		SUBDIRS = src
+		EOF
+	echo " done"
+
+# Build the Makefile.am file for the src directory.
+	echo -n "Building src/Makefile.am..."
+	cat <<- EOF > src/Makefile.am
+		# Flags to pass to compiler and linker.
+		AM_CFLAGS = -Wall -g -std=c99 -O2
+		AM_LDFLAGS =
+		# List the binaries and their sources.
+		bin_PROGRAMS = pass_gen
+		main_SOURCES = pass_gen.c pass_gen.h
+		# Location to install below installs in ($PREFIX)/bin or ($PREFIX)/sbin
+		EOF
+	echo " done"
+
+# Build the Makefile.am file for the doc directory.
+	echo -n "Building doc/Makefile.am..."
+	cat <<- EOF > doc/Makefile.am
+		# Nothing here yet.
+		EOF
+	echo " done"
+
+# Build the Makefile.am file for the man directory.
+	echo -n "Building man/Makefile.am..."
+	cat <<- EOF > man/Makefile.am
+		# Nothing here yet.
+		EOF
+	echo " done"
+
+# Build the Makefile.am file for the scripts directory.
+	echo -n "Building scripts/Makefile.am..."
+	cat <<- EOF > scripts/Makefile.am
+		# Nothing here yet.
+		EOF
+	echo " done"
+
+# Build the Makefile.am file for the examples directory.
+	echo -n "Building examples/Makefile.am..."
+	cat <<- EOF > examples/Makefile.am
+		# Nothing here yet.
+		EOF
+	echo " done"
+
+# Run autoscan to build an initial configure file.
+	echo -n "Running 'autoscan'..."
+	autoscan
+	echo " done"
+
+# Move the result, configure.scan, to configure.ac.
+	echo -n "Moving configure.scan to configure.ac..."
+	mv configure.scan configure.ac
+	echo " done"
+
+# Add the AM_INIT_AUTOMAKE macro to enable automake.
+	echo -n "Insert AM_INIT_AUTOMAKE into configure.ac..."
+	sed -i "/AC_INIT/aAM_INIT_AUTOMAKE" configure.ac
+	echo " done"
+
+# Add the package name.
+	echo -n "Adjusting package name in AC_INIT in configure.ac..."
+	sed -i "s/FULL-PACKAGE-NAME/$PACKAGE_NAME/g" configure.ac
+	echo " done"
+
+# Add the version.
+	echo -n "Adjusting version in AC_INIT in configure.ac..."
+	sed -i "s/VERSION/$VERSION/g" configure.ac
+	echo " done"
+
+# Add the bug email address.
+	echo -n "Adjusting bug report address in AC_INIT in configure.ac..."
+	sed -i "s/BUG-REPORT-ADDRESS/$BUG_EMAIL/g" configure.ac
+	echo " done"
+
+# Run aclocal to prep automake macros.
+	echo -n "Running aclocal..."
+	aclocal
+	echo " done"
+
+# Run autoreconf with the --install option to create missing files.
+# Result is the configure file users will run.
+	echo -n "Running autoreconf --install..."
+	autoreconf --install
+	echo " done"
+
+# Run automake with --add-missing to add missing files and also
+# --copy to create copies of template files instead of sym links.
+# Result is the Makefile that users will use.
+	echo -n "Running automake --add-missing --copy..."
+	automake --add-missing --copy
+	echo " done"
+
+	echo "\n\n"
