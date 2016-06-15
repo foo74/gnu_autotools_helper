@@ -1,18 +1,20 @@
 # gnu_autotools_helper
-A helper script to create a template GNU autotools project.
+Helper scripts to create a template GNU autotools project.
 
-Make sure to chmod +x the script. It builds a C template project that works
-with GNU Autotools (autoconf and automake). Currently only builds with src
-subdirectory. If you need man, doc, etc subdirs then add them in the script
+Make sure to chmod +x the script. 
+
+The convert_to_gnu_autotools script converts an existing project to autotools.
+
+The make_new_gnu_autotools creates a brand new project and includes stub C and header.
+
+The result is a proejct that works with GNU Autotools (autoconf and automake). 
+If you need man, doc, etc subdirs then add them in the script
 at the location for sources.
-
-The conv_ assumes an existing project.
-The make_ assumes no existing project.
 
 To use:
 
 1. Edit the variables at the top of the script to set package name, version, and bug email.
-2. Then run: ./make_gnu_proj <project_name>
+2. Then run: ./make_new_gnu_autotools <project_name>
 3. Then cd into the <project_name> directory and you can then do:
 	./configure --prefix=/home/foo/
 	make
